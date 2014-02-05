@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<title>Palindromes</title>
+		<script>
+			function convertbase(n,b){
+				var n_b = new Array(); //n in base b
+				var remainder;
+				
+				while(n>0) {
+					remainder = n % b;
+					n = Math.floor(n/b);
+					n_b.push(remainder);
+				}
+				return n_b;
+			}
+			
+			function isPalindrome(digits){
+				return(String(digits) == String(digits.reverse()));
+			}
+			
+			function digitsToString(digits){
+				var i;
+				var formated="|";
+				
+				for(i=0; i<digits.length; i++){
+					formated+=digits[i]+"|";
+				}
+				return formated;
+				
+				//return String(digits).replace(",","|");
+			}
+			function refresh(buffer, txt, t){
+				t = setTimeout("refresh(buffer)", 1000, t);
+				txt.value = buffer;
+			}
+			
+			function testPalindromeBases(n){
+				var base, n_base_b, txt, isPal, filter, pb, buffer, timer;
+
+				buffer="";
+				//refresh(buffer, txt, timer);
+				
+				txt = document.getElementById("txt");				
+				filter = document.getElementById("only").checked;
+				pb = document.getElementById("pb").checked;
+				
+				for(base = 2; base < n-1; base++){
+					n_base_b = convertbase(n,base);
+					isPal = isPalindrome(n_base_b);
+					if(!pb || isPalindrome(convertbase(base))){
+						if(!filter || isPal){
+							buffer+= n + (isPal?" *IS* ":" isn\'t") + " palindromic in base " + base + " : " + n_base_b + "\n";
+						}
+					}
+				}	
+				txt.value = buffer;
+				//clearTimeout(t);
+			}
+			
+			function test(){
+				var n = document.getElementById('n').value;
+				if(!isNaN(n)){
+					testPalindromeBases(parseInt(n));
+				} else {
+					txt = document.getElementById("txt");
+					txt.value = "Try with a integer number";		
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<form id="f" action="#">
+			<label for="n">n=</label>
+			<input type="text" name="n" id="n" value ="2012">
+			<label for="only">only palindromes</label>
+			<input type="checkbox" name="only" id="only" checked>
+			<label for="pb">in palindromic base</label>
+			<input type="checkbox" name="pb" id="pb" >
+			<input type="button" value="go" onclick="test();"><br>
+			<textarea id="txt" rows="20" cols="100"></textarea>
+		</form>
+	</body>
+	
+</html>
